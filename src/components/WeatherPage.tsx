@@ -64,7 +64,7 @@ const WeatherPage = () => {
   const { main, wind, weather } = weatherData;
 
   return (
-    <div className="flex justify-center flex-col  items-center h-screen mt-[15%] md:mt-2 p-4">
+    <div className="flex justify-center flex-col  items-center h-screen mt-[25%] md:mt-2 p-4">
       {" "}
       <h2 className="text-center text-3xl font-extrabold mb-8 ">
         Weather for {cityName}

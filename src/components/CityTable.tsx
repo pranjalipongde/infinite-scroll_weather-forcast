@@ -73,7 +73,7 @@ const CityTable = () => {
   };
 
   return (
-    <div className="mx-auto p-4 max-w-2xl">
+    <div className="mx-auto p-4 max-w-2xl bg-blue-200">
       <input
         type="text"
         placeholder="Search"
