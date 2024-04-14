@@ -87,7 +87,7 @@ const CityTable = () => {
           <tr>
             <th className="border border-gray-200 px-4 py-2">City Name</th>
             <th className="border border-gray-200 px-4 py-2">Country</th>
-            <th className="border border-gray-200 px-4 py-2">Timezone</th>
+            <th className="border border-gray-200 px-4 py-2 ">Timezone</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
