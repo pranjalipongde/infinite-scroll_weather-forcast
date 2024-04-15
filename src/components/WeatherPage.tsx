@@ -34,14 +34,13 @@ const WeatherPage = () => {
 
   const [weatherData, setWeatherData] = useState<WeatherDataProps | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
-  if (!cityName) {
-    return <div className="text-xl text-red-600">No city name provided.</div>;
-  }
-
   useEffect(() => {
+    if (!cityName) return;
+
     const fetchWeatherData = async () => {
       try {
         setLoading(true);
@@ -59,7 +58,7 @@ const WeatherPage = () => {
 
         setWeatherData(data);
       } catch (error) {
-        console.error("Error fetching weather data:", error);
+        setError("Error fetching weather data");
       } finally {
         setLoading(false);
       }
@@ -67,8 +66,16 @@ const WeatherPage = () => {
     fetchWeatherData();
   }, [cityName]);
 
+  if (!cityName) {
+    return <div className="text-xl text-red-600">No city name provided.</div>;
+  }
+
   if (loading) {
     return <div className="text-center mt-4">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center mt-4">{error}</div>;
   }
 
   if (!weatherData) {

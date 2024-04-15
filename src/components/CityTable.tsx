@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface City {
   geoname_id: number;
@@ -92,14 +93,14 @@ const CityTable = () => {
               className={index % 2 === 0 ? "bg-gray-50" : ""}
             >
               <td className="px-4 py-2">
-                <a
-                  href={`/weather/${city.name}`}
+                <Link
+                  to={`/weather/${encodeURIComponent(city.name)}`}
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-500 hover:underline"
                 >
                   {city.name}
-                </a>
+                </Link>
               </td>
               <td className="px-4 py-2">{city.cou_name_en}</td>
               <td className="px-4 py-2 ">{city.timezone}</td>
