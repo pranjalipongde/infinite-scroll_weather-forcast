@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import WeatherToday from "./WeatherToday";
 import WeatherHighlights from "./WeatherHighlights";
 
-interface WeatherData {
+interface WeatherDataProps {
+  name: string;
+  sys: {
+    country: string;
+    sunrise: number;
+    sunset: number;
+  };
   main: {
     temp: number;
+    feels_like: number;
     humidity: number;
     pressure: number;
   };
@@ -14,14 +21,25 @@ interface WeatherData {
   };
   weather: {
     description: string;
+    icon: string;
   }[];
+  visibility: number;
+  clouds: {
+    all: number;
+  };
 }
 
 const WeatherPage = () => {
-  const { cityName } = useParams<{ cityName: string }>();
+  const { cityName } = useParams<{ cityName?: string }>();
 
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+  const [weatherData, setWeatherData] = useState<WeatherDataProps | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  if (!cityName) {
+    return <div className="text-xl text-red-600">No city name provided.</div>;
+  }
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -61,14 +79,23 @@ const WeatherPage = () => {
     );
   }
 
-  const { main, wind, weather } = weatherData;
-
   return (
-    <div className="flex justify-center flex-col  items-center h-screen mt-[25%] md:mt-2 p-4">
-      {" "}
-      <h2 className="text-center text-3xl font-extrabold mb-8 ">
-        Weather for {cityName}
+    <div className="flex justify-center flex-col  items-center h-screen mt-[30%] md:mt-2 p-4">
+      <button
+        className="absolute top-4 left-4 bg-blue-500 text-white font-bold px-4 py-2 rounded hover:bg-blue-800"
+        onClick={() => navigate("/")}
+      >
+        ⬅️ Back
+      </button>
+
+      <h2 className="text-center text-3xl font-extrabold mb-8 mt-2">
+        Weather for{" "}
+        <span className="text-pink-600">
+          {weatherData.name} <span className="text-black">City,</span>{" "}
+          {weatherData.sys.country}
+        </span>
       </h2>
+
       <div className="flex flex-col md:flex-row gap-6 items-stretch">
         {" "}
         <div className="flex-grow bg-gray-300 rounded-lg shadow-md p-8">

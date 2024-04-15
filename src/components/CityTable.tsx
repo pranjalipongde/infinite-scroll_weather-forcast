@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
 interface City {
-  geonameid: number;
+  geoname_id: number;
   name: string;
   country: string;
   timezone: string;
+  cou_name_en?: string;
 }
 
 const CityTable = () => {
@@ -13,13 +14,11 @@ const CityTable = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const tableRef = useRef<HTMLTableElement>(null);
 
   const fetchCitiesData = async () => {
     try {
-      setLoading(true);
       const response = await fetch(
         "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records?limit=100&lang=en"
       );
@@ -31,8 +30,6 @@ const CityTable = () => {
       setFilteredCities((prevCities) => [...prevCities, ...data.results]);
     } catch (error) {
       console.error("Error fetching cities:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -45,23 +42,21 @@ const CityTable = () => {
       if (
         tableRef.current &&
         window.innerHeight + window.scrollY >=
-          window.document.body.offsetHeight - 30 &&
-        !loading
+          document.body.offsetHeight - 20 &&
+        page < totalPages
       ) {
-        if (page < totalPages) {
-          console.log("Fteching more data...");
-
+        {
+          console.log("Fetching more data...");
           setPage((prevPage) => prevPage + 1);
         }
       }
     };
-
     window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [page, totalPages, loading]);
+  }, [page, totalPages]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value.toLowerCase();
@@ -73,18 +68,18 @@ const CityTable = () => {
   };
 
   return (
-    <div className="mx-auto p-4 max-w-2xl bg-blue-200">
+    <div className="mx-auto p-4 max-w-3xl">
       <input
         type="text"
         placeholder="Search"
         value={searchTerm}
         onChange={handleSearch}
-        className="border border-gray-300 rounded p-2 mb-4 w-full"
+        className="border-none border-gray-200  bg-gray-200  rounded p-2 mb-4 w-full"
       />
 
       <table className="min-w-full border-collapse " ref={tableRef}>
         <thead>
-          <tr>
+          <tr className="bg-gray-200">
             <th className="border border-gray-200 px-4 py-2">City Name</th>
             <th className="border border-gray-200 px-4 py-2">Country</th>
             <th className="border border-gray-200 px-4 py-2 ">Timezone</th>
@@ -92,28 +87,28 @@ const CityTable = () => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {filteredCities.map((city, index) => (
-            <tr key={city.geoname_id}>
+            <tr
+              key={`${city.geoname_id}-${index}`}
+              className={index % 2 === 0 ? "bg-gray-50" : ""}
+            >
               <td className="px-4 py-2">
                 <a
                   href={`/weather/${city.name}`}
                   target="_blank"
                   rel="noreferrer"
+                  className="text-blue-500 hover:underline"
                 >
                   {city.name}
                 </a>
               </td>
               <td className="px-4 py-2">{city.cou_name_en}</td>
-              <td className="px-4 py-2">{city.timezone}</td>
-              {index === filteredCities.length - 1 && page < totalPages && (
-                <tr>
-                  <td colSpan={3} className="text-center py-4">
-                    Loading...
-                  </td>
-                </tr>
-              )}
+              <td className="px-4 py-2 ">{city.timezone}</td>
             </tr>
           ))}
         </tbody>
+        {page < totalPages && (
+          <div className="text-center py-4">Loading...</div>
+        )}
       </table>
     </div>
   );
