@@ -94,9 +94,7 @@ const CityTable = () => {
             >
               <td className="px-4 py-2">
                 <Link
-                  to={`https://infinite-scroll-weather-forecast-web.netlify.app/weather/${encodeURIComponent(
-                    city.name
-                  )}`}
+                  to="/weather/:cityName"
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-500 hover:underline"
