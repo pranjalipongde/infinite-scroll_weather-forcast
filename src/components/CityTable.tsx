@@ -94,7 +94,7 @@ const CityTable = () => {
             >
               <td className="px-4 py-2">
                 <Link
-                  to="/weather/:cityName"
+                  to={`/weather/${encodeURIComponent(city.name)}`}
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-500 hover:underline"
